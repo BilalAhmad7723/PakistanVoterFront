@@ -1,0 +1,9 @@
+@media only screen and (min-device-width: 480px){
+
+    ant-layout{
+        width: auto;
+    }
+    card{
+        width: "10rem"
+    }
+}

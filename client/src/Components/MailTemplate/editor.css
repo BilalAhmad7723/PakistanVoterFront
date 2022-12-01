@@ -1,0 +1,35 @@
+.tox-statusbar__branding {
+  display: none;
+}
+#components-layout-demo-side .logo {
+    height: 32px;
+    margin: 16px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .site-layout .site-layout-background {
+    background: #fff;
+  }
+  .badge {
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.5rem 2rem;
+    white-space: nowrap;
+  }
+  .badge--small {
+    font-size: 1rem;
+  }
+  .badge--secondary {
+    background: #00d9ff;
+    color: #fff;
+  }
+  @media screen and (min-width: 768px) {
+    .badge {
+      font-size: 10px;
+    }
+  
+    .badge--small {
+      font-size: 15px;
+  }
+  }
