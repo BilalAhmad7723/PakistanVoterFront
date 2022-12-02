@@ -77,7 +77,7 @@ let approvedlist = [];
             </div>
             <div className="col-lg-3 col-sm-6">
               <Card bg="info" border="info" text="light" className="mb-2">
-                <Card.Header>Approved Candidates </Card.Header>
+                <Card.Header>Approved Candidates</Card.Header>
                 <Card.Body>
                   <Card.Title>{Candi ? Candi.length : 0 }</Card.Title>
                   <Card.Text>Approved Candidates For Vote</Card.Text>
