@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const http = axios.create({
-   baseURL: 'https://pakistanvoterfront.herokuapp.com',
+   baseURL: 'https://pvf.onrender.com/',
 //  baseURL: 'http://192.168.200.158:5000', //Release Base URL
   headers: {'Content-Type': 'application/json'},
 });
