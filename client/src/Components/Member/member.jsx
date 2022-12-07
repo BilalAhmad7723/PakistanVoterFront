@@ -26,6 +26,7 @@ function Account() {
   const onSubmit = (data) => {
     if (data.email === "") data.email = seldata.email;
     if (data.password === "") data.password = seldata.password;
+    if (data.constituency === "") data.constituency = seldata.constituency;
     setModalShow(false);
     onUpdate(data);
     reset();
@@ -103,6 +104,15 @@ function Account() {
                   placeholder={seldata.password}
                   type="text"
                   {...register("password")}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12} sm={12} className="mb-3">
+                <Form.Control
+                  placeholder={seldata.constituency}
+                  type="text"
+                  {...register("constituency")}
                 />
               </Col>
             </Row>
