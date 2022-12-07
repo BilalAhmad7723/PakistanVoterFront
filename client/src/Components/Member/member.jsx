@@ -183,7 +183,6 @@ function Account() {
                           <td>{i + 1}</td>
                           <td>{item.email}</td>
                           <td>{item.password}</td>
-                          <td>{item.constituency} </td>
                           <td>
                             {item.voteFlag === true ? (
                               <LikeTwoTone
@@ -197,6 +196,7 @@ function Account() {
                               />
                             )}
                           </td>
+                          <td>{item.constituency} </td>
                           <td>
                             <Button
                               variant="outline-success"
