@@ -197,7 +197,7 @@ function Subject() {
                     <th>#</th>
                     <th>Name</th>
                     <th>Father Name</th>
-                    <th>CNIC</th>
+                    <th>Constituency</th>
                     <th>Vote</th>
                     <th>Phone</th>
                     <th>Edit</th>
@@ -211,7 +211,7 @@ function Subject() {
                         <td>{i+1}</td>
                         <td>{item.name}</td>
                         <td>{item.fname}</td>
-                        <td>{item.cnic}</td>
+                        <td>{item.constituency}</td>
                         <td>{item.count}</td>
                         <td>{item.phone}</td>
                         <td>
