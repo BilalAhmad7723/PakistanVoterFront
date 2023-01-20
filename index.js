@@ -1,5 +1,6 @@
 let express = require('express');
 let mongoose = require('mongoose');
+const multer = require("multer");
 let cors = require('cors');
 let bodyParser = require('body-parser');
 //var jwt = require('jsonwebtoken');
@@ -22,10 +23,41 @@ app.use(cors());
 
 app.use(bodyParser.json({limit: "50mb"}));
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename(req, file, cb) {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${file.originalname}`
+    )
+  },
+})
 
+function checkFileType(file, cb) {
+  const filetypes = /jpg|jpeg|png/ // Choose Types you want...
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
+  const mimetype = filetypes.test(file.mimetype)
+
+  if (extname && mimetype) {
+    return cb(null, true)
+  } else {
+    cb('Images only!') // custom this message to fit your needs
+  }
+}
+
+const upload = multer({
+  storage,
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb)
+  },
+})
  app.use('/user', UserRoute);
 app.use('/candidate', CandidateRoute);
-
+app.post('/uploadimage', upload.single('image'), (req, res) => {
+  res.send(`/${req.file.path}`);
+})
 // --------------------------deployment------------------------------
 if (process.env.NODE_ENV == "production") {
   app.use(express.static("client/build"));
