@@ -8,6 +8,12 @@ let usersSchema = new Schema({
   password: {
      type : String
    },
+   religion: {
+    type : String
+  },
+  gender: {
+    type : String
+  },
    constituency:{
     type: String
   },
