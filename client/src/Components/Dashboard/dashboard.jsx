@@ -16,17 +16,8 @@ export default function Dashboard() {
   const [FM, setFM] = useState([]);
   const [MNonM, setMNonM] = useState([]);
   const [NonMF, setNonMF] = useState([]);
-  let approvedlist = [];
-  let PendingList  = [];
-  let MuslimList = [];
-  let NonMuslimList = [];
-  let male = [];
-  let female = [];
-  let MaleMuslim = [];
-  let FemaleMuslim = [];
-  let MaleNonMuslim = [];
-  let FemaleNonMuslim = [];
-
+  
+  
   useEffect(() => {
     
   const getData = () => {
@@ -76,6 +67,16 @@ export default function Dashboard() {
         console.log(error);
       });
   }; 
+    let approvedlist = [];
+  let PendingList  = [];
+  let MuslimList = [];
+  let NonMuslimList = [];
+  let male = [];
+  let female = [];
+  let MaleMuslim = [];
+  let FemaleMuslim = [];
+  let MaleNonMuslim = [];
+  let FemaleNonMuslim = [];
     getData();
     getCandidatesData();
   }, []);

@@ -3,7 +3,7 @@ import http from "../../apiConfig";
 import Select from 'react-select'
 //import { connect} from 'react-redux';
 import { useForm, Controller  } from "react-hook-form";
-import { Form,Col, Row,Container, Button,Table,Modal,} from "react-bootstrap";
+import { Form,Col, Row,Container, Button,Table,Modal,Pagination} from "react-bootstrap";
 import { LikeTwoTone, DislikeTwoTone } from "@ant-design/icons";
 import { Empty, Spin } from "antd";
 import { Popconfirm, message, Badge } from "antd";
@@ -1150,7 +1150,18 @@ function Account() {
   const [modalShow, setModalShow] = useState(false);
   const [seldata, setseldata] = useState({});
   const [finaldata, setfinaldata] = useState();
+  const [finaldata1, setfinaldata1] = useState();
   const { control, register, handleSubmit, reset } = useForm();
+
+  let active = 1;
+  let items = [];
+  for (let number = 1; number <= 5; number++) {
+    items.push(
+      <Pagination.Item key={number} active={number === active}>
+        {number}
+      </Pagination.Item>,
+    );
+  }
   const onSubmit = (data) => {
     if (data.email === "") data.email = seldata.email;
     if (data.password === "") data.password = seldata.password;
@@ -1191,6 +1202,7 @@ function Account() {
       .then((response) => {
         setloading(false);
         setfinaldata(response.data);
+        setfinaldata1(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -1293,7 +1305,16 @@ function Account() {
     verticalAlign: `middle`,
     cursor: `pointer`,
   };
-
+  const FindArry = (arr,search) =>{
+  const res = arr.filter((obj) =>
+  JSON.stringify(obj).toLowerCase().includes(search.toLowerCase())
+)
+    setfinaldata(res)
+  }
+  const handleInputSearch = (event) =>{
+    const target = event.target.value;
+     FindArry(finaldata1,target);
+  }
   return (
     <Container fluid>
       <Spin spinning={loading} tip="Loading Accounts..." size="large">
@@ -1308,6 +1329,12 @@ function Account() {
               </Row>
             </section>
             <section>
+            <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Search</span>
+                </div>
+                <input type="text" className="form-control" onChange={handleInputSearch} aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+            </div>
               {finaldata ? (
                 <Table style={TStyle} striped table-success="true" bordered hover size="sm" responsive >
                   <thead>
@@ -1386,6 +1413,7 @@ function Account() {
                 <Empty />
               )}
             </section>
+            <Pagination size="sm">{items}</Pagination>
           </div>
         </section>
       </Spin>
