@@ -2,7 +2,7 @@ import { React, useState, useEffect } from "react";
 import http from "../../apiConfig";
 import Select from 'react-select'
 import { useForm, Controller } from "react-hook-form";
-import { Form,Col, Row, Container, Button, Table, Modal} from "react-bootstrap";
+import { Form,Col, Row, Container, Button, Table, Modal, Pagination} from "react-bootstrap";
 import { Empty,Spin,Badge } from "antd";
 import { Popconfirm, message } from "antd";
 //import Select from 'react-select';
@@ -1120,8 +1120,18 @@ function Subject() {
   const [loading, setloading] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [data, setData] = useState({});
+  const [finaldata, setfinaldata] = useState();
   const [seldata, setseldata] = useState({});
   const { register, handleSubmit,reset,control } = useForm();
+  let active = 1;
+  let items = [];
+  for (let number = 1; number <= 5; number++) {
+    items.push(
+      <Pagination.Item key={number} active={number === active}>
+        {number}
+      </Pagination.Item>,
+    );
+  }
   const onSubmit = (data) => {
       if(data.email === '') data.email = seldata.email;
       if(data.cnic === '') data.cnic = seldata.cnic;
@@ -1166,13 +1176,12 @@ function Subject() {
         setData({
           data: response.data,
         });
+        setfinaldata(response.data)
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-
 
   function EditModal(props) {
     const center = {
@@ -1248,6 +1257,7 @@ function Subject() {
       </Modal>
     );
   }
+  
   function confirm(e) {
     http
       .delete("/candidate/delete-candidates/" + e._id)
@@ -1265,7 +1275,16 @@ function Subject() {
   function cancel(e) {
     message.error("Candiate not Deleted!");
   }
-
+  const FindArry = (arr,search) =>{
+    const res = arr.filter((obj) =>
+    JSON.stringify(obj).toLowerCase().includes(search.toLowerCase())
+  )
+  setData({data:res});
+    }
+    const handleInputSearch = (event) =>{
+      const target = event.target.value;
+       FindArry(finaldata,target);
+    }
   const TStyle = {
     textAlign: `center`, 
     verticalAlign: `middle`,
@@ -1285,6 +1304,12 @@ function Subject() {
             </Row>
           </section>
           <section>
+          <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-default">Search</span>
+                </div>
+                <input type="text" className="form-control" onChange={handleInputSearch} aria-label="Default" aria-describedby="inputGroup-sizing-default" />
+            </div>
             {data.data ? (
               <Table
                 style={TStyle}
@@ -1350,11 +1375,14 @@ function Subject() {
                   show={modalShow}
                   onHide={() => setModalShow(false)}
                 />
+                
               </Table>
+               
             ) : (
               <Empty />
             )}
           </section>
+          <Pagination size="sm">{items}</Pagination>
         </div>
       </section>
       </Spin>
