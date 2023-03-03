@@ -92,7 +92,7 @@ export default function Dashboard() {
   }, []);
   const dataManageAp = (array,code) =>{
     let showArry = []
-    if(code === 'Approved Candiates' || code === 'Pending Candiates' ||code === 'Total Candiatdates' || code === 'Rejected Candiates'){
+    if(code === 'Approved Candiates' || code === 'Pending Candiates' ||code === 'Total Candidates' || code === 'Rejected Candiates'){
       array.forEach((element,i) => {
         showArry.push({
           "#": i+1,
