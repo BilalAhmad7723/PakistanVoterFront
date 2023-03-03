@@ -2,10 +2,11 @@ import { React, useState, useEffect } from "react";
 import http from "../../apiConfig";
 import Select from 'react-select'
 import { useForm, Controller } from "react-hook-form";
-import { Form,Col, Row, Container, Button, Table, Modal, Pagination} from "react-bootstrap";
+import { Form,Col, Row, Container, Button, Table, Modal} from "react-bootstrap";
 import { Empty,Spin,Badge } from "antd";
+import DataTable from 'datatables.net-dt';
+import "../Member/table.css"
 import { Popconfirm, message } from "antd";
-//import Select from 'react-select';
 const ConstituencyArray =  [
   {
       "label": "Select your Constiuency",
@@ -1120,18 +1121,10 @@ function Subject() {
   const [loading, setloading] = useState(false);
   const [modalShow, setModalShow] = useState(false);
   const [data, setData] = useState({});
-  const [finaldata, setfinaldata] = useState();
+  const [finaldata1, setfinaldata1] = useState();
   const [seldata, setseldata] = useState({});
   const { register, handleSubmit,reset,control } = useForm();
-  let active = 1;
-  let items = [];
-  for (let number = 1; number <= 5; number++) {
-    items.push(
-      <Pagination.Item key={number} active={number === active}>
-        {number}
-      </Pagination.Item>,
-    );
-  }
+  new DataTable('#CandidateTable');
   const onSubmit = (data) => {
       if(data.email === '') data.email = seldata.email;
       if(data.cnic === '') data.cnic = seldata.cnic;
@@ -1151,10 +1144,8 @@ function Subject() {
   };
 
   const onUpdate = (data) => {
-    console.log(data);
       http.put('/candidate/update-candidates/' + seldata._id, data)
       .then((res) => {
-        console.log('Candidate updated' + res)
         getData();
       }).catch((error) => {
         console.log(error)
@@ -1176,7 +1167,9 @@ function Subject() {
         setData({
           data: response.data,
         });
-        setfinaldata(response.data)
+        setfinaldata1({
+            data: response.data,
+          })
       })
       .catch((error) => {
         console.log(error);
@@ -1257,7 +1250,7 @@ function Subject() {
       </Modal>
     );
   }
-  
+
   function confirm(e) {
     http
       .delete("/candidate/delete-candidates/" + e._id)
@@ -1275,16 +1268,7 @@ function Subject() {
   function cancel(e) {
     message.error("Candiate not Deleted!");
   }
-  const FindArry = (arr,search) =>{
-    const res = arr.filter((obj) =>
-    JSON.stringify(obj).toLowerCase().includes(search.toLowerCase())
-  )
-  setData({data:res});
-    }
-    const handleInputSearch = (event) =>{
-      const target = event.target.value;
-       FindArry(finaldata,target);
-    }
+
   const TStyle = {
     textAlign: `center`, 
     verticalAlign: `middle`,
@@ -1294,32 +1278,13 @@ function Subject() {
     <Container fluid>
        <Spin spinning={loading}  tip="Loading Subjects..." size="large">
       <section>
-        <div
-          className="site-layout-background"
-          style={{ padding: 24, minHeight: 360 }}
-        >
+        <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }} >
           <section className="mb-2">
-            <Row>
-              <h3>Candidates:</h3>
-            </Row>
+            <Row> <h3>Candidates:</h3> </Row>
           </section>
           <section>
-          <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-default">Search</span>
-                </div>
-                <input type="text" className="form-control" onChange={handleInputSearch} aria-label="Default" aria-describedby="inputGroup-sizing-default" />
-            </div>
             {data.data ? (
-              <Table
-                style={TStyle}
-                striped
-                table-success="true"
-                bordered
-                hover
-                size="sm"
-                responsive
-              >
+              <Table id="CandidateTable" style={TStyle} striped table-success="true" hover size="md" responsive >
                 <thead>
                   <tr>
                     <th>#</th>
@@ -1327,6 +1292,7 @@ function Subject() {
                     <th>Father Name</th>
                     <th>Constituency</th>
                     <th>Vote</th>
+                    <th>Status</th>
                     <th>Phone</th>
                     <th>Edit</th>
                     <th>Delete</th>
@@ -1341,6 +1307,8 @@ function Subject() {
                         <td>{item.fname}</td>
                         <td>{item.constituency}</td>
                         <td>{item.count}</td>
+                        <td><Badge  style={{ backgroundColor: item.status === 'approved' ?  '#008000': item.status === 'pending' ? '#0dcaf0' : ""}} count={item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : ''}></Badge></td>
+                        
                         <td>{item.phone}</td>
                         <td>
                           <Button
@@ -1382,7 +1350,6 @@ function Subject() {
               <Empty />
             )}
           </section>
-          <Pagination size="sm">{items}</Pagination>
         </div>
       </section>
       </Spin>

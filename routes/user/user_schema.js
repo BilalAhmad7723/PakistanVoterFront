@@ -11,6 +11,9 @@ let usersSchema = new Schema({
    religion: {
     type : String
   },
+  feeCollection: {
+    type : String
+  },
   gender: {
     type : String
   },

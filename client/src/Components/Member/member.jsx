@@ -3,7 +3,9 @@ import http from "../../apiConfig";
 import Select from 'react-select'
 //import { connect} from 'react-redux';
 import { useForm, Controller  } from "react-hook-form";
-import { Form,Col, Row,Container, Button,Table,Modal,Pagination} from "react-bootstrap";
+import DataTable from 'datatables.net-dt';
+import "../Member/table.css"
+import { Form,Col, Row,Container, Button,Table,Modal} from "react-bootstrap";
 import { LikeTwoTone, DislikeTwoTone } from "@ant-design/icons";
 import { Empty, Spin } from "antd";
 import { Popconfirm, message, Badge } from "antd";
@@ -1142,8 +1144,6 @@ const ConstituencyArray =  [
       "value": "NA-272"
   }
 ]
-//import { SetEmail } from "../../Store/action/action";
-//import MaterialTable from "material-table";
 function Account() {
   // const dispatch = useDispatch();
   const [loading, setloading] = useState(false);
@@ -1153,18 +1153,11 @@ function Account() {
   const [finaldata1, setfinaldata1] = useState();
   const { control, register, handleSubmit, reset } = useForm();
 
-  let active = 1;
-  let items = [];
-  for (let number = 1; number <= 5; number++) {
-    items.push(
-      <Pagination.Item key={number} active={number === active}>
-        {number}
-      </Pagination.Item>,
-    );
-  }
+  new DataTable('#myTable');
   const onSubmit = (data) => {
     if (data.email === "") data.email = seldata.email;
     if (data.password === "") data.password = seldata.password;
+    if (data.feeCollection === "") data.feeCollection = seldata.feeCollection;
     if (data.constituency === ""|| data.constituency === undefined) data.constituency = seldata.constituency;
     else data.constituency = data.constituency.value;
     if (data.gender === "" || data.gender === undefined) data.gender = seldata.gender;
@@ -1246,12 +1239,6 @@ function Account() {
             <Row>
               <Col lg={6} sm={6} className="mb-3">
               <Controller name="constituency" control={control} render={({ field }) => <Select {...field} placeholder={seldata.constituency}  options={ConstituencyArray} />} />
-              {/* <Select options={ConstituencyArray}   defaultValue={ConstituencyArray[0]} {...register("constituency")} /> */}
-              {/* <Form.Control
-                  placeholder={seldata.constituency}
-                  type="text"
-                  {...register("constituency")}
-                /> */}
               </Col>
               <Col lg={6} sm={6} className="mb-3">
               <Form.Control placeholder={seldata.password} type="text" {...register("password")} />
@@ -1260,13 +1247,14 @@ function Account() {
             <Row>
               <Col lg={6} sm={6} className="mb-3">
               <Controller name="religion" control={control} render={({ field }) => <Select {...field} placeholder={seldata.religion} options={ReligionArray} />} />
-              {/* <Form.Control placeholder={seldata.religion} type="text" {...register("religion")} /> */}
-              {/* <Select placeholder={seldata.religion} name="religion" {...register("religion")} defaultValue={selectedOption} onChange={religionChange} options={ReligionArray} /> */}
               </Col>
               <Col lg={6} sm={6} className="mb-3">
               <Controller name="gender" control={control} render={({ field }) => <Select {...field} placeholder={seldata.gender}  options={GenderArray} />} />
-              {/* <Form.Control placeholder={seldata.gender} type="text" {...register("gender")} /> */}
-              {/* <Select placeholder={seldata.gender} options={GenderArray} {...register("gender")} defaultValue={selectedOption1} onChange={genderchange} /> */}
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={6} sm={6} className="mb-3">
+              <Form.Control placeholder={seldata.feeCollection} type="text" {...register("feeCollection")} />
               </Col>
             </Row>
           </Modal.Body>
@@ -1300,21 +1288,6 @@ function Account() {
     message.error("Click on No");
   }
 
-  const TStyle = {
-    textAlign: `center`,
-    verticalAlign: `middle`,
-    cursor: `pointer`,
-  };
-  const FindArry = (arr,search) =>{
-  const res = arr.filter((obj) =>
-  JSON.stringify(obj).toLowerCase().includes(search.toLowerCase())
-)
-    setfinaldata(res)
-  }
-  const handleInputSearch = (event) =>{
-    const target = event.target.value;
-     FindArry(finaldata1,target);
-  }
   return (
     <Container fluid>
       <Spin spinning={loading} tip="Loading Accounts..." size="large">
@@ -1329,14 +1302,8 @@ function Account() {
               </Row>
             </section>
             <section>
-            <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-default">Search</span>
-                </div>
-                <input type="text" className="form-control" onChange={handleInputSearch} aria-label="Default" aria-describedby="inputGroup-sizing-default" />
-            </div>
               {finaldata ? (
-                <Table style={TStyle} striped table-success="true" bordered hover size="sm" responsive >
+                <Table id="myTable" striped hover size="sm" >
                   <thead>
                     <tr>
                       <th>#</th>
@@ -1345,6 +1312,7 @@ function Account() {
                       <th>Religion</th>
                       <th>Gender</th>
                       <th>Voted</th>
+                      <th>Fee Collection</th>
                       <th>Constituency</th>
                       <th>Edit</th>
                       <th>Delete</th>
@@ -1372,6 +1340,7 @@ function Account() {
                               />
                             )}
                           </td>
+                          <td>{item.feeCollection} </td>
                           <td>{item.constituency} </td>
                           <td>
                             <Button
@@ -1413,7 +1382,6 @@ function Account() {
                 <Empty />
               )}
             </section>
-            <Pagination size="sm">{items}</Pagination>
           </div>
         </section>
       </Spin>

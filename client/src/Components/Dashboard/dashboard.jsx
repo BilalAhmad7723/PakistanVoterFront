@@ -1,12 +1,17 @@
 import { React,useState,useEffect } from "react";
 import http from "../../apiConfig";
-import { Container, Card, Row } from "react-bootstrap";
+import { Container,Table, Card, Row ,Modal} from "react-bootstrap";
 import "../Dashboard/dash.css";
 export default function Dashboard() {
-
+  const TStyle = {
+    textAlign: `center`,
+    verticalAlign: `middle`,
+    cursor: `pointer`,
+  };
   //const [data, setData] = useState({});
   const [Candi, setCandiData] = useState({});
   const [Pending, setPending] = useState([]);
+  const [Rejected, setRejected] = useState([]);
   const [TotalCandiatdate, setTotalCandiatdate] = useState({});
   const [Muslim, setMuslim] = useState([]);
   const [NonMuslim, setNonMuslim] = useState([]);
@@ -16,7 +21,9 @@ export default function Dashboard() {
   const [FM, setFM] = useState([]);
   const [MNonM, setMNonM] = useState([]);
   const [NonMF, setNonMF] = useState([]);
-  
+  const [modalShow, setModalShow] = useState(false);
+  const [DataShow, setDataShow] = useState([]);
+  const [DataLabel, setDataLabel] = useState('');
   
   useEffect(() => {
     
@@ -57,10 +64,12 @@ export default function Dashboard() {
       .then((response) => {
         response.data.forEach(element => {
           if(element.status === 'approved') approvedlist.push(element);
-          else PendingList.push(element)
+          else if(element.status === 'pending') PendingList.push(element);
+          else RejectedList.push(element)
         });
         setCandiData(approvedlist);
         setPending(PendingList);
+        setRejected(RejectedList);
         setTotalCandiatdate( response.data)
       })
       .catch((error) => {
@@ -69,6 +78,7 @@ export default function Dashboard() {
   }; 
     let approvedlist = [];
   let PendingList  = [];
+  let RejectedList = [];
   let MuslimList = [];
   let NonMuslimList = [];
   let male = [];
@@ -80,6 +90,82 @@ export default function Dashboard() {
     getData();
     getCandidatesData();
   }, []);
+  const dataManageAp = (array,code) =>{
+    let showArry = []
+    if(code === 'Approved Candiates' || code === 'Pending Candiates' ||code === 'Total Candiatdates' || code === 'Rejected Candiates'){
+      array.forEach((element,i) => {
+        showArry.push({
+          "#": i+1,
+          "Name": element.name,
+          "Father Name": element.fname,
+          "Email": element.email,
+          "Religion": element.religion === 'islam' ? "Muslim" : 'Non Muslim',
+          "Gender": element.gender === 'male' ? "Male" : "Female",
+          "Status": element.status ? element.status.charAt(0).toUpperCase() + element.status.slice(1) : '',
+          "Constituency": element.constituency,
+        })
+      });
+    }
+    else if(code === 'Muslim Memebers' || code === 'Non-Muslim Members' ||
+     code ==='Non-Muslim Female Members' || code ==='Male Members' || code ==='Female Members' ||
+      code ==='Muslim Male Members' || code ==='Muslim Female Members' || 
+      code === 'Non-Muslim Male Members'){
+      array.forEach((element,i) => {
+        showArry.push({
+          "#": i+1,
+          "Account": element.email,
+          "Religion": element.religion === 'islam' ? "Muslim" : 'Non Muslim',
+          "Gender": element.gender === 'male' ? "Male" : "Female",
+          "Constituency": element.constituency,
+          "Fee Collection": element.feeCollection
+        })
+      });
+    }
+    setDataShow(showArry);
+    setDataLabel(code)
+  }
+  function EditModal(props) {
+    var keys = ''
+    if(props.data.length > 0) keys = Object.keys(props.data[0]);
+    return (
+      <Modal {...props} size="xl" aria-labelledby="EditModalTitle" fullscreen="xxl-down" backdrop="static" keyboard={false} centered >
+        <Modal.Header closeButton="true" closeLabel="">
+          <Modal.Title id="example-custom-modal-styling-title">
+            {DataLabel}
+          </Modal.Title>
+        </Modal.Header>
+          <Modal.Body>
+            { props.data.length > 0 ? 
+          <Table style={TStyle} striped table-success="true" bordered hover size="lg" responsive >
+                  <thead>
+                    <tr>
+                    {keys.length > 0 ? keys.map(function (item, i) {
+                      return (
+                      <th>{item}</th>
+                      )}): ''}
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {props.data.length > 0 ? props.data.map(function (item1, i) {
+                      return (
+                        <tr>
+                           {Object.entries(item1).map((day, i) => {
+                           return <td>{day[1]}</td>
+                           })}
+                     </tr>
+                      )}): ''}
+                  </tbody>
+          </Table> : <span style={{textAlign: `center`}}>No Date Found</span> }
+          </Modal.Body>
+          {/* <Modal.Footer style={{ justifyContent: `center` }}>
+            <Button style={{ background: `#008000`, border: `#008000` }} onClick={props.onHide} >
+              Close
+            </Button>
+          </Modal.Footer> */}
+      </Modal>
+    );
+  }
+
   return (
     <Container fluid>
       <section>
@@ -88,22 +174,32 @@ export default function Dashboard() {
           <Row style={{textAlign:`center`}}>
             <div className="col-lg-3 col-sm-6">
               <Card bg="success" border="success" text="white" className="mb-2">
-                <Card.Header>Approved Members</Card.Header>
+                <Card.Header>Approved Candidates</Card.Header>
                 <Card.Body>
                   <Card.Title>{Candi ? Candi.length : 0 }</Card.Title>
-                  <Card.Text>Approved Members</Card.Text>
+                  <Card.Text>Approved Candidates</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(Candi, "Approved Candiates") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
               <Card bg="light" border="light" text="dark" className="mb-2">
-                <Card.Header>Approved Pending Members</Card.Header>
+                <Card.Header>Pending Candidates</Card.Header>
                 <Card.Body>
                   <Card.Title>{Pending ? Pending.length : 0 }</Card.Title>
-                  <Card.Text>Approved Pending Members</Card.Text>
+                  <Card.Text>Pending Candidates</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(Pending, "Pending Candiates") }}>View More</Card.Footer>
+              </Card>
+            </div>
+            <div className="col-lg-3 col-sm-6">
+              <Card bg="danger" border="danger" text="light" className="mb-2">
+                <Card.Header>Rejected Candidates</Card.Header>
+                <Card.Body>
+                  <Card.Title>{Rejected ? Rejected.length : 0 }</Card.Title>
+                  <Card.Text>Rejected Candidates</Card.Text>
+                </Card.Body>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(Rejected, "Rejected Candiates") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -113,7 +209,7 @@ export default function Dashboard() {
                   <Card.Title>{Muslim ? Muslim.length : 0 }</Card.Title>
                   <Card.Text>Muslim Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(Muslim, "Muslim Memebers") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -123,7 +219,7 @@ export default function Dashboard() {
                   <Card.Title>{NonMuslim ? NonMuslim.length : 0 }</Card.Title>
                   <Card.Text>Non Muslim Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(NonMuslim, "Non-Muslim Members") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -131,19 +227,19 @@ export default function Dashboard() {
                 <Card.Header>Male Members</Card.Header>
                 <Card.Body>
                   <Card.Title>{Male ? Male.length : 0 }</Card.Title>
-                  <Card.Text>Muslim Members in Records</Card.Text>
+                  <Card.Text>Male Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(Male, "Male Members") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
-              <Card bg="danger" border="danger" text="light" className="mb-2">
+              <Card bg="light" border="light" text="dark" className="mb-2">
                 <Card.Header>Female Members</Card.Header>
                 <Card.Body>
                   <Card.Title>{Female ? Female.length : 0 }</Card.Title>
                   <Card.Text>Female Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(Female, "Female Members") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -153,7 +249,7 @@ export default function Dashboard() {
                   <Card.Title>{MM ? MM.length : 0 }</Card.Title>
                   <Card.Text>Muslim Male Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(MM, "Muslim Male Members") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -163,7 +259,7 @@ export default function Dashboard() {
                   <Card.Title>{FM ? FM.length : 0 }</Card.Title>
                   <Card.Text>Muslim Female Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer  style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(FM, "Muslim Female Members") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -173,7 +269,7 @@ export default function Dashboard() {
                   <Card.Title>{MNonM ? MNonM.length : 0 }</Card.Title>
                   <Card.Text>Non-Muslim Male Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(MNonM, "Non-Muslim Male Members") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -183,7 +279,7 @@ export default function Dashboard() {
                   <Card.Title>{NonMF ? NonMF.length : 0 }</Card.Title>
                   <Card.Text>Non-Muslim Female Members in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(NonMF, "Non-Muslim Female Members") }}>View More</Card.Footer>
               </Card>
             </div>
             <div className="col-lg-3 col-sm-6">
@@ -193,12 +289,13 @@ export default function Dashboard() {
                   <Card.Title>{TotalCandiatdate ? TotalCandiatdate.length : 0 }</Card.Title>
                   <Card.Text>Total Candidates in Records</Card.Text>
                 </Card.Body>
-                <Card.Footer>View More</Card.Footer>
+                <Card.Footer style={{cursor:`pointer`}} onClick={() => { setModalShow(true); dataManageAp(TotalCandiatdate, "Total Candiatdates") }}>View More</Card.Footer>
               </Card>
             </div>
           </Row>
         </div>
       </section>
+      <EditModal data={DataShow} show={modalShow} onHide={() => setModalShow(false)} />
     </Container>
   );
 }

@@ -13,7 +13,9 @@ router.route('/get_candidates').get((req, res, next) => {
       }
     })
 })
-
+router.route('/forget_pass').get((req, res, next) => {
+  console.log("Forget PAssword:" + req);
+})
 
 router.route('/add-candidates').post((req, res, next) => {
   canidateSchema.create(req.body, (error, data) => {
