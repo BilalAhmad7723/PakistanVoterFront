@@ -34,8 +34,7 @@ let candidateSchema = new Schema({
   },
   Image: 
     {
-        data: Buffer,
-        contentType: String
+      type: String
   },
   nominatedBy: {
     name : {type: String},
