@@ -1156,6 +1156,7 @@ function Account() {
   new DataTable('#myTable');
   const onSubmit = (data) => {
     if (data.email === "") data.email = seldata.email;
+    if (data.name === "") data.name = seldata.name;
     if (data.password === "") data.password = seldata.password;
     if (data.feeCollection === "") data.feeCollection = seldata.feeCollection;
     if (data.constituency === ""|| data.constituency === undefined) data.constituency = seldata.constituency;
@@ -1256,6 +1257,9 @@ function Account() {
               <Col lg={6} sm={6} className="mb-3">
               <Form.Control placeholder={seldata.feeCollection} type="text" {...register("feeCollection")} />
               </Col>
+              <Col lg={6} sm={6} className="mb-3">
+              <Form.Control placeholder={seldata.name} type="text" {...register("name")} />
+              </Col>
             </Row>
           </Modal.Body>
           <Modal.Footer style={{ justifyContent: `center` }}>
@@ -1308,9 +1312,9 @@ function Account() {
                     <tr>
                       <th>#</th>
                       <th>Account</th>
-                      <th>Password</th>
+                      <th>Name</th>
                       <th>Religion</th>
-                      <th>Gender</th>
+                      <th>Refrence</th>
                       <th>Voted</th>
                       <th>Fee Collection</th>
                       <th>Constituency</th>
@@ -1324,9 +1328,9 @@ function Account() {
                         <tr key={i}>
                           <td>{i + 1}</td>
                           <td>{item.email}</td>
-                          <td>{item.password}</td>
+                          <td>{item.name}</td>
                           <td>{item.religion}</td>
-                          <td>{item.gender}</td>
+                          <td>{item.RefMemberID !== undefined  ? item.RefMemberID : "Self Refrence"}</td>
                           <td>
                             {item.voteFlag === true ? (
                               <LikeTwoTone
