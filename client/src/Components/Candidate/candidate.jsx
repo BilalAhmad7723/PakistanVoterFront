@@ -5,8 +5,9 @@ import { useForm, Controller } from "react-hook-form";
 import { Form,Col, Row, Container, Button, Table, Modal} from "react-bootstrap";
 import { Empty,Spin,Badge } from "antd";
 import DataTable from 'datatables.net-dt';
-import "../Member/table.css"
-import { Popconfirm, message } from "antd";
+import "../Member/table.css";
+import { WhatsAppOutlined , PhoneOutlined} from "@ant-design/icons";
+import { Popconfirm, message} from "antd";
 const ConstituencyArray =  [
   {
       "label": "Select your Constiuency",
@@ -1293,7 +1294,7 @@ function Subject() {
                     <th>Constituency</th>
                     <th>Vote</th>
                     <th>Status</th>
-                    <th>Phone</th>
+                    <th>Phone No.</th>
                     <th>Edit</th>
                     <th>Delete</th>
                   </tr>
@@ -1308,8 +1309,23 @@ function Subject() {
                         <td>{item.constituency}</td>
                         <td>{item.count}</td>
                         <td><Badge  style={{ backgroundColor: item.status === 'approved' ?  '#008000': item.status === 'pending' ? '#0dcaf0' : ""}} count={item.status ? item.status.charAt(0).toUpperCase() + item.status.slice(1) : ''}></Badge></td>
-                        
-                        <td>{item.phone}</td>
+                        <td>
+                            <Row>
+                                <Col>
+                                    {item.phone}
+                                </Col>
+                                <Col>
+                                    <WhatsAppOutlined  onClick={ () => {
+                                        window.open('http://api.whatsapp.com/send?phone=92' + item.phone.slice(1));
+                                     }} style= {{fontSize : `20px`, color: `green`}}/>
+                                </Col>
+                                <Col>
+                                <a href="tel:92' + item.phone.slice(1)">
+                                <PhoneOutlined style= {{fontSize : `20px`, color: `#0e4ba5`}}/>
+                                </a>
+                                </Col>
+                            </Row> 
+                        </td>
                         <td>
                           <Button
                             variant="outline-success"

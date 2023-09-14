@@ -15,12 +15,14 @@ router.route('/get-account').get((req, res, next) => {
 })
 
 router.route('/get-auth').post((req, res, next) => {
-  const {email,password} = req.body;
-  userSchema.findOne({'email': email},(error, data) => {
+  const {cnic,password} = req.body;
+  console.log("Cnic"+ cnic + "PAss" + password);
+  userSchema.findOne({'cnic': cnic},(error, data) => {
       if (error) {
         return next(error)
       } else {
-        if(email === data.email && password === data.password)
+        console.log("Table Date"+ data);
+        if(cnic === data.cnic && password === data.password)
         {
           res.set('Access-Control-Allow-Origin', '*');
          res.json({
@@ -32,7 +34,7 @@ router.route('/get-auth').post((req, res, next) => {
         else {
           res.set('Access-Control-Allow-Origin', '*');
           res.json({
-            message: "Wrong email & password!",
+            message: "Wrong CNIC & password!",
             status: 205,
             data:data
           })

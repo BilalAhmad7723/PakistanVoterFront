@@ -1,0 +1,21 @@
+  #MemberTable td {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .acc{
+    width: 3.9rem;
+  }
+
+  .abutton{
+    overflow: visible !important;
+width: 5rem;  }
+
+  .sr{
+    width: 0.7rem;
+  }
+
+  .vote{
+    width: 3rem;
+  }

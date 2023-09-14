@@ -3,15 +3,35 @@ const Schema = mongoose.Schema;
 
 let usersSchema = new Schema({
   name:{
-    type: String
+    type: String,
   },
   email:{
-    type: String
+    type: String,
+    unique: true
+  },
+  father:{
+    type: String,
+    unique: true
+  },
+  dateOFJoin:{
+    type: Date,
+    unique: true
+  },
+  cnic:{
+    type: String,
+    unique: true
   },
   password: {
-     type : String
+     type : String,
+     unique: false,
    },
    religion: {
+    type : String
+  },
+  phone: {
+    type : String
+  },
+  fullAddress: {
     type : String
   },
   feeCollection: {
@@ -21,6 +41,12 @@ let usersSchema = new Schema({
     type : String
   },
   gender: {
+    type : String
+  },
+  city: {
+    type : String
+  },
+  occupation: {
     type : String
   },
    constituency:{

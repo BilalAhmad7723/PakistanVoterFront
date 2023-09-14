@@ -4,11 +4,13 @@ import Select from 'react-select'
 //import { connect} from 'react-redux';
 import { useForm, Controller  } from "react-hook-form";
 import DataTable from 'datatables.net-dt';
-import "../Member/table.css"
+import $ from 'jquery'
+import "../Member/table.css";
 import { Form,Col, Row,Container, Button,Table,Modal} from "react-bootstrap";
 import { LikeTwoTone, DislikeTwoTone } from "@ant-design/icons";
 import { Empty, Spin } from "antd";
 import { Popconfirm, message, Badge } from "antd";
+import './member.css'
 
 const GenderArray =  [
   {
@@ -1152,11 +1154,37 @@ function Account() {
   const [finaldata, setfinaldata] = useState();
   const [finaldata1, setfinaldata1] = useState();
   const { control, register, handleSubmit, reset } = useForm();
-
-  new DataTable('#myTable');
+  new DataTable('#MemberTable');
+//   $(document).ready(function() {
+//     var table = $('#MemberTable').DataTable({
+//       "columns": [
+//         { "width": "5%" }, // # column
+//         { "width": "10%" }, // Account column
+//         { "width": "15%" }, // Name column
+//         { "width": "10%" }, // CNIC column
+//         { "width": "10%" }, // Religion column
+//         { "width": "10%" }, // Reference column
+//         { "width": "5%" }, // Voted column
+//         { "width": "10%" }, // Collection column
+//         { "width": "15%" }, // Constituency column
+//         { "width": "50%" }, // Action column,
+       
+//       ],
+//       destroy:true
+      
+//     });
+//   });
+  
   const onSubmit = (data) => {
+    
     if (data.email === "") data.email = seldata.email;
     if (data.name === "") data.name = seldata.name;
+    if (data.father === "") data.father = seldata.father;
+    if (data.cnic === "") data.cnic = seldata.cnic;
+    if (data.phone === "") data.phone = seldata.phone;
+    if (data.city === "") data.city = seldata.city;
+    if (data.fullAddress === "") data.fullAddress = seldata.fullAddress;
+    if (data.occupation === "") data.occupation = seldata.occupation;
     if (data.password === "") data.password = seldata.password;
     if (data.feeCollection === "") data.feeCollection = seldata.feeCollection;
     if (data.constituency === ""|| data.constituency === undefined) data.constituency = seldata.constituency;
@@ -1165,6 +1193,8 @@ function Account() {
     else data.gender = data.gender.value;
     if (data.religion === ""  || data.religion === undefined) data.religion = seldata.religion;
     else data.religion = data.religion.value;
+    if (data.dateOFJoin === "" || data.dateOFJoin === undefined) data.dateOFJoin = seldata.dateOFJoin;
+    else data.dateOFJoin = data.dateOFJoin;
     setModalShow(false);
     onUpdate(data);
     reset();
@@ -1204,21 +1234,22 @@ function Account() {
   };
 
   function EditModal(props) {
+    if(props.data.dateOFJoin) {
+        var today = new Date(seldata.dateOFJoin );
+        var year = today.getFullYear();
+        var mes = today.toLocaleString('en-us', { month: 'long' });
+        var dia = today.getDate();
+        var fecha =dia+"-"+mes+"-"+year;
+        console.log(fecha);
+        seldata.dateOFJoin = fecha;
+    }
+  //  seldata.dateOFJoin = new Date(seldata.dateOFJoin);
     return (
       <Modal
-        {...props}
-        size="md"
-        aria-labelledby="EditModalTitle"
-        backdrop="static"
-        keyboard={false}
-        centered
-      >
-        <Badge.Ribbon
-          color="#008000"
-          text={seldata.email + ":" + seldata.password}
-        >
+        {...props} size="xl" aria-labelledby="EditModalTitle" backdrop="static" keyboard={false} centered >
+        <Badge.Ribbon color="#008000" text={seldata.email + ":" + seldata.password} >
           <Modal.Header>
-            <Modal.Title id="EditModal">
+            <Modal.Title id="EditModal" style={{color:'green'}}>
               Update Account{" "}
               <h5 style={{ fontSize: 10, color: `red` }}>
                 *Fill only those Fileds you want to update
@@ -1229,36 +1260,68 @@ function Account() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Modal.Body>
             <Row>
-              <Col lg={12} sm={12} className="mb-3">
-                <Form.Control
-                  placeholder={seldata.email}
-                  type="text"
-                  {...register("email")}
-                />
+              <Col lg={3} sm={3} className="mb-1">
+                <Form.Label>Email</Form.Label>
+                <Form.Control placeholder={seldata.email} defaultValue={seldata.email} type="text" {...register("email")} />
+              </Col>
+              <Col lg={3} sm={3} className="mb-1">
+              <Form.Label>Name</Form.Label>
+              <Form.Control placeholder={seldata.name} defaultValue={seldata.name} type="text" {...register("name")} />
+              </Col>
+              <Col lg={3} sm={3} className="mb-1">
+              <Form.Label>Father Name</Form.Label>
+              <Form.Control placeholder={seldata.father} defaultValue={seldata.father} type="text" {...register("father")} />
+              </Col>
+              <Col lg={3} sm={3} className="mb-1">
+              <Form.Label>Password</Form.Label>
+              <Form.Control placeholder={seldata.password} defaultValue={seldata.password} type="text" {...register("password")} />
+              </Col>
+
+            </Row>
+            <Row>
+            <Col lg={3} sm={3} className="mb-1">
+              <Form.Label>CNIC</Form.Label>
+                <Form.Control placeholder={seldata.cnic} defaultValue={seldata.cnic} type="text" {...register("cnic")} />
+            </Col>
+            <Col lg={6} sm={6} className="mb-1">
+              <Form.Label>Full Address</Form.Label>
+              <Form.Control placeholder={seldata.fullAddress} defaultValue={seldata.fullAddress} type="text" {...register("fullAddress")} />
+              </Col>
+              <Col lg={3} sm={3} className="mb-1">
+              <Form.Label>Date Of joining:  <span style={{color:'green',fontFamily:'monospace',fontWeight:'bold'}}>{seldata.dateOFJoin}</span></Form.Label>
+              <Form.Control type="date" {...register("dateOFJoin")} />
               </Col>
             </Row>
             <Row>
-              <Col lg={6} sm={6} className="mb-3">
-              <Controller name="constituency" control={control} render={({ field }) => <Select {...field} placeholder={seldata.constituency}  options={ConstituencyArray} />} />
+              <Col lg={4} sm={4} className="mb-1">
+              <Form.Label>Constituency</Form.Label>
+              <Controller name="constituency" control={control} render={({ field }) => <Select {...field} placeholder={seldata.constituency} defaultValue={seldata.constituency}  options={ConstituencyArray} />} />
               </Col>
-              <Col lg={6} sm={6} className="mb-3">
-              <Form.Control placeholder={seldata.password} type="text" {...register("password")} />
-              </Col>
-            </Row>
-            <Row>
-              <Col lg={6} sm={6} className="mb-3">
+              <Col lg={4} sm={4} className="mb-2">
+              <Form.Label>Religion</Form.Label>
               <Controller name="religion" control={control} render={({ field }) => <Select {...field} placeholder={seldata.religion} options={ReligionArray} />} />
               </Col>
-              <Col lg={6} sm={6} className="mb-3">
+              <Col lg={4} sm={4} className="mb-2">
+              <Form.Label>Gender</Form.Label>
               <Controller name="gender" control={control} render={({ field }) => <Select {...field} placeholder={seldata.gender}  options={GenderArray} />} />
               </Col>
             </Row>
             <Row>
-              <Col lg={6} sm={6} className="mb-3">
-              <Form.Control placeholder={seldata.feeCollection} type="text" {...register("feeCollection")} />
+              <Col lg={3} sm={3} className="mb-3">
+              <Form.Label>Telephone / Mob No.</Form.Label>
+              <Form.Control placeholder={seldata.phone} defaultValue={seldata.phone} type="text" {...register("phone")} />
               </Col>
-              <Col lg={6} sm={6} className="mb-3">
-              <Form.Control placeholder={seldata.name} type="text" {...register("name")} />
+              <Col lg={3} sm={3} className="mb-3">
+              <Form.Label>Occupation</Form.Label>
+              <Form.Control placeholder={seldata.occupation} defaultValue={seldata.occupation} type="text" {...register("occupation")} />
+              </Col>
+              <Col lg={3} sm={3} className="mb-3">
+              <Form.Label>City</Form.Label>
+              <Form.Control placeholder={seldata.city} defaultValue={seldata.city} type="text" {...register("city")} />
+              </Col>
+              <Col lg={3} sm={3} className="mb-3">
+              <Form.Label>Fee Collection</Form.Label>
+              <Form.Control placeholder={seldata.feeCollection} defaultValue={seldata.feeCollection} type="text" {...register("feeCollection")} />
               </Col>
             </Row>
           </Modal.Body>
@@ -1305,21 +1368,21 @@ function Account() {
                 <h3>Members:</h3>
               </Row>
             </section>
-            <section>
+            <section style={{overflowX : `auto`}}>
               {finaldata ? (
-                <Table id="myTable" striped hover size="sm" >
+                <Table id="MemberTable" striped hover size="sm" >
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>Account</th>
+                      <th className="sr">#</th>
+                      <th className="acc">Account</th>
                       <th>Name</th>
-                      <th>Religion</th>
+                      <th className="cnic">CNIC</th>
+                      {/* <th>Religion</th> */}
                       <th>Refrence</th>
-                      <th>Voted</th>
-                      <th>Fee Collection</th>
+                      <th className="vote">Voted</th>
+                      {/* <th>Collection</th> */}
                       <th>Constituency</th>
-                      <th>Edit</th>
-                      <th>Delete</th>
+                      <th className="abutton">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1327,9 +1390,10 @@ function Account() {
                       return (
                         <tr key={i}>
                           <td>{i + 1}</td>
-                          <td>{item.email}</td>
+                          <td className="acc">{item.email}</td>
                           <td>{item.name}</td>
-                          <td>{item.religion}</td>
+                          <td>{item.cnic}</td>
+                          {/* <td>{item.religion}</td> */}
                           <td>{item.RefMemberID !== undefined  ? item.RefMemberID : "Self Refrence"}</td>
                           <td>
                             {item.voteFlag === true ? (
@@ -1344,11 +1408,12 @@ function Account() {
                               />
                             )}
                           </td>
-                          <td>{item.feeCollection} </td>
+                          {/* <td>{item.feeCollection} </td> */}
                           <td>{item.constituency} </td>
-                          <td>
+                          <td className="abutton">
                             <Button
                               variant="outline-success"
+                              
                               size="sm"
                               onClick={() => {
                                 setModalShow(true);
@@ -1357,8 +1422,6 @@ function Account() {
                             >
                               Edit
                             </Button>
-                          </td>
-                          <td>
                             <Popconfirm
                               title="Are you sure to delete this Account?"
                               onConfirm={() => confirm(item)}
@@ -1366,7 +1429,7 @@ function Account() {
                               okText="Yes"
                               cancelText="No"
                             >
-                              <Button variant="outline-danger" size="sm">
+                              <Button className="ms-2" variant="outline-danger" size="sm">
                                 Delete
                               </Button>
                             </Popconfirm>
