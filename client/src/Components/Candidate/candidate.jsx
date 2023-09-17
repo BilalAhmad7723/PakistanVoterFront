@@ -1295,8 +1295,7 @@ function Subject() {
                     <th>Vote</th>
                     <th>Status</th>
                     <th>Phone No.</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1327,7 +1326,7 @@ function Subject() {
                             </Row> 
                         </td>
                         <td>
-                          <Button
+                        <Button
                             variant="outline-success"
                             size="sm"
                             onClick={() => {
@@ -1337,8 +1336,6 @@ function Subject() {
                           >
                             Edit
                           </Button>
-                        </td>
-                        <td>
                           <Popconfirm
                             title="Are you sure to delete this Candidate?"
                             onConfirm={() => confirm(item)}
@@ -1346,7 +1343,7 @@ function Subject() {
                             okText="Yes"
                             cancelText="No"
                           >
-                            <Button variant="outline-danger" size="sm">
+                            <Button className="ms-2" variant="outline-danger" size="sm">
                               Delete
                             </Button>
                           </Popconfirm>

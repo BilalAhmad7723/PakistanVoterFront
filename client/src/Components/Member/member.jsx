@@ -4,10 +4,11 @@ import Select from 'react-select'
 //import { connect} from 'react-redux';
 import { useForm, Controller  } from "react-hook-form";
 import DataTable from 'datatables.net-dt';
-import $ from 'jquery'
+//import $ from 'jquery'
 import "../Member/table.css";
 import { Form,Col, Row,Container, Button,Table,Modal} from "react-bootstrap";
 import { LikeTwoTone, DislikeTwoTone } from "@ant-design/icons";
+import { WhatsAppOutlined , PhoneOutlined} from "@ant-design/icons";
 import { Empty, Spin } from "antd";
 import { Popconfirm, message, Badge } from "antd";
 import './member.css'
@@ -1154,29 +1155,11 @@ function Account() {
   const [finaldata, setfinaldata] = useState();
   const [finaldata1, setfinaldata1] = useState();
   const { control, register, handleSubmit, reset } = useForm();
-  new DataTable('#MemberTable');
-//   $(document).ready(function() {
-//     var table = $('#MemberTable').DataTable({
-//       "columns": [
-//         { "width": "5%" }, // # column
-//         { "width": "10%" }, // Account column
-//         { "width": "15%" }, // Name column
-//         { "width": "10%" }, // CNIC column
-//         { "width": "10%" }, // Religion column
-//         { "width": "10%" }, // Reference column
-//         { "width": "5%" }, // Voted column
-//         { "width": "10%" }, // Collection column
-//         { "width": "15%" }, // Constituency column
-//         { "width": "50%" }, // Action column,
-       
-//       ],
-//       destroy:true
-      
-//     });
-//   });
-  
+  new DataTable('#MemberTable',{
+  destroy : true,
+}
+  );
   const onSubmit = (data) => {
-    
     if (data.email === "") data.email = seldata.email;
     if (data.name === "") data.name = seldata.name;
     if (data.father === "") data.father = seldata.father;
@@ -1240,7 +1223,7 @@ function Account() {
         var mes = today.toLocaleString('en-us', { month: 'long' });
         var dia = today.getDate();
         var fecha =dia+"-"+mes+"-"+year;
-        console.log(fecha);
+       // console.log(fecha);
         seldata.dateOFJoin = fecha;
     }
   //  seldata.dateOFJoin = new Date(seldata.dateOFJoin);
@@ -1359,30 +1342,24 @@ function Account() {
     <Container fluid>
       <Spin spinning={loading} tip="Loading Accounts..." size="large">
         <section>
-          <div
-            className="site-layout-background"
-            style={{ padding: 24, minHeight: 360 }}
-          >
-            <section className="mb-2">
-              <Row>
-                <h3>Members:</h3>
-              </Row>
-            </section>
+          <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }} >
+            <section className="mb-2"> <Row> <h3>Members:</h3> </Row> </section>
             <section style={{overflowX : `auto`}}>
               {finaldata ? (
                 <Table id="MemberTable" striped hover size="sm" >
                   <thead>
                     <tr>
-                      <th className="sr">#</th>
-                      <th className="acc">Account</th>
+                      <th>#</th>
+                      <th>Account</th>
                       <th>Name</th>
-                      <th className="cnic">CNIC</th>
+                      <th>CNIC</th>
+                      <th style={{ width: `200px`}}>Phone No.</th>
                       {/* <th>Religion</th> */}
-                      <th>Refrence</th>
-                      <th className="vote">Voted</th>
+                      {/* <th>Refrence</th> */}
+                      <th>Voted</th>
                       {/* <th>Collection</th> */}
-                      <th>Constituency</th>
-                      <th className="abutton">Action</th>
+                      <th title="constituency">Consti.</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1393,8 +1370,25 @@ function Account() {
                           <td className="acc">{item.email}</td>
                           <td>{item.name}</td>
                           <td>{item.cnic}</td>
+                          <td>
+                          <Row>
+                                <Col>
+                                    {item.phone}
+                                </Col>
+                                <Col>
+                                    <WhatsAppOutlined  onClick={ () => {
+                                        window.open('http://api.whatsapp.com/send?phone=92' + item.phone.slice(1));
+                                     }} style= {{fontSize : `20px`, color: `green`}}/>
+                                </Col>
+                                <Col>
+                                <a href="tel:92' + item.phone.slice(1)">
+                                <PhoneOutlined style= {{fontSize : `20px`, color: `#0e4ba5`}}/>
+                                </a>
+                                </Col>
+                            </Row> 
+                        </td>
                           {/* <td>{item.religion}</td> */}
-                          <td>{item.RefMemberID !== undefined  ? item.RefMemberID : "Self Refrence"}</td>
+                          {/* <td>{item.RefMemberID !== undefined  ? item.RefMemberID : "Self Refrence"}</td> */}
                           <td>
                             {item.voteFlag === true ? (
                               <LikeTwoTone
@@ -1413,7 +1407,6 @@ function Account() {
                           <td className="abutton">
                             <Button
                               variant="outline-success"
-                              
                               size="sm"
                               onClick={() => {
                                 setModalShow(true);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { Layout, Menu } from "antd";
 import {
-  DatabaseOutlined,
+  UsergroupAddOutlined ,
   PieChartOutlined,
   UserOutlined
 } from "@ant-design/icons";
@@ -27,7 +27,7 @@ const App = () => {
           <span>Dashboard</span>
           <Link to="/app"></Link>
         </Menu.Item>
-        <Menu.Item key="/member" icon={<DatabaseOutlined />}>
+        <Menu.Item key="/member" icon={<UsergroupAddOutlined  />}>
           <span>Member</span>
           <Link to="/app/member" />
         </Menu.Item>
