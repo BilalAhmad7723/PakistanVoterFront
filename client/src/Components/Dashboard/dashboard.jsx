@@ -1,4 +1,5 @@
-import { React,useState,useEffect } from "react";
+import React from 'react';
+import { useState,useEffect } from "react";
 import http from "../../apiConfig";
 import { Container,Table, Card, Row ,Modal} from "react-bootstrap";
 import "../Dashboard/dash.css";

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-
+import React from 'react';
+import { useState } from "react";
 import { Layout, Menu } from "antd";
 import {
-  UsergroupAddOutlined ,
+  UsergroupAddOutlined,
   PieChartOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
 
@@ -14,32 +14,39 @@ const App = () => {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
-  const onCollapse = (collapsed) => setCollapsed(collapsed);
+  // Define navigation items as an array of objects
+  const menuItems = [
+    {
+      key: "/app",
+      icon: <PieChartOutlined />,
+      label: <Link to="/app">Dashboard</Link>,
+    },
+    {
+      key: "/app/member",
+      icon: <UsergroupAddOutlined />,
+      label: <Link to="/app/member">Member</Link>,
+    },
+    {
+      key: "/app/candidate",
+      icon: <UserOutlined />,
+      label: <Link to="/app/candidate">Candidate</Link>,
+    },
+    /* {
+      key: "/app/mail",
+      icon: <MailOutlined />,
+      label: <Link to="/app/mail">Email</Link>,
+    }, */
+  ];
+
   return (
-    <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+    <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
       <div className="logo" />
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={[location.pathname]}
-      >
-        <Menu.Item key="/dashboard" icon={<PieChartOutlined />}>
-          <span>Dashboard</span>
-          <Link to="/app"></Link>
-        </Menu.Item>
-        <Menu.Item key="/member" icon={<UsergroupAddOutlined  />}>
-          <span>Member</span>
-          <Link to="/app/member" />
-        </Menu.Item>
-        <Menu.Item key="/candidate" icon={<UserOutlined />}>
-          <span>Candidate</span>
-          <Link to="/app/candidate" />
-        </Menu.Item>
-        {/* <Menu.Item key="/mail" icon={<MailOutlined />}>
-          <span>Email</span>
-          <Link to="/app/mail" />
-        </Menu.Item> */}
-      </Menu>
+        selectedKeys={[location.pathname]}
+        items={menuItems}
+      />
     </Sider>
   );
 };

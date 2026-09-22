@@ -1,44 +1,51 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+
+// CSS Imports
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+
+// Component Imports (Capitalized as React components)
 import Login from "./Components/Login/login";
+import Dashboard from "./Components/Dashboard/dashboard";
+import Member from "./Components/Member/member";
+import Candidate from "./Components/Candidate/candidate";
 import SuccessPage from "./Components/MailTemplate/success";
 import ErrorPage from "./Components/MailTemplate/error";
-import dashboard from "./Components/Dashboard/dashboard";
-import RouteApp from "./App";
-import "antd/dist/antd.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-//import mail from "./Components/MailTemplate/editor";
-import candidate from "./Components/Candidate/candidate";
-import member from "./Components/Member/member";
-import nomatch from "./Components/MailTemplate/nomatch";
-import { Provider } from "react-redux";
-import store from "./Store/store/store";
+import NoMatch from "./Components/MailTemplate/nomatch";
 
-ReactDOM.render(
-  <Provider store={store}>
-  <BrowserRouter>
-    <Switch>
-      <Route exact path={"/"} component={Login} />
-      <Route
-        path={"/app"}
-        render={({ match: { url } }) => (
-          <Switch>
-            <RouteApp exact path={`${url}/`} component={dashboard} />
-            <RouteApp exact path={`${url}/member`} component={member} />
-            <RouteApp exact path={`${url}/candidate`} component={candidate} />
-          </Switch>
-        )}
-      />
-       <Route exact path={"/success"} component={SuccessPage} />
-       <Route exact path={"/error"} component={ErrorPage} />
-       <Route exact path={"*"} component={nomatch} />
-    </Switch>
-  </BrowserRouter>
-  </Provider>,
-  document.getElementById("root")
+// Store & Layout Imports
+import store from "./Store/store/store";
+import RouteApp from "./App";
+import reportWebVitals from "./reportWebVitals";
+
+const root = createRoot(document.getElementById("root"));
+
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Login />} />
+          <Route path="/success" element={<SuccessPage />} />
+          <Route path="/error" element={<ErrorPage />} />
+
+          {/* Nested Protected App Routes */}
+          <Route path="/app" element={<RouteApp />}>
+            <Route index element={<Dashboard />} />
+            <Route path="member" element={<Member />} />
+            <Route path="candidate" element={<Candidate />} />
+          </Route>
+
+          {/* Fallback 404 Route */}
+          <Route path="*" element={<NoMatch />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>
 );
 
 reportWebVitals();

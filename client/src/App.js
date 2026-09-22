@@ -1,16 +1,12 @@
-import React from "react";
-import {  Route } from "react-router-dom";
+import React from 'react';
+import { Outlet } from "react-router-dom";
 import Layout from './Components/Layout';
 import "./App.css";
 
-export default function App({ component: Component }) {
+export default function App() {
   return (
-    <Route
-      render={(routeProps) => (
-        <Layout>
-          <Component {...routeProps} />
-        </Layout>
-    )}
-  />
+    <Layout>
+      <Outlet />
+    </Layout>
   );
 }
