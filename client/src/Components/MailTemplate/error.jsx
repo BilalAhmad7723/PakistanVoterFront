@@ -1,19 +1,19 @@
-import { React } from "react";
+import React from "react";
 import { Container } from "react-bootstrap";
 import { Result, Button, Typography } from "antd";
 import { CloseCircleOutlined } from "@ant-design/icons";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const { Paragraph, Text } = Typography;
 
 export default function ErrorPage() {
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const Middle = {
     padding: `13em 0`,
     background: `aliceblue`
   };
   const back = () => {
-    history.push("/app/mail");
+    navigate("/app/mail");
   };
   return (
     <Container fluid>

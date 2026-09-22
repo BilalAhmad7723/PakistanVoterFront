@@ -1,8 +1,8 @@
-import { React } from "react";
+import React from 'react';
 import { Form, Button, Container } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import "../Login/login.scss";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 //import http from "../apiConfig";
 import logo from "../../Assets/rs.png";
 import { message } from "antd";
@@ -38,7 +38,7 @@ export default function Login() {
   //       console.log(error);
   //     });
   // };
-  const history = useHistory();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -47,7 +47,7 @@ export default function Login() {
   const onSubmit = (data) => {
     if (data.email === "admin@admin.com" && data.password === "admin") {
       message.success("Login Successfully!!!");
-      history.push("/app");
+      navigate("/app");
     } else {
       message.error("Invalid Email & Password!!!");
     }

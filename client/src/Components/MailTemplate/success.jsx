@@ -1,20 +1,20 @@
-import { React } from "react";
+import React from "react";
 import { Container } from "react-bootstrap";
 import { Result, Button } from "antd";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function SuccessPage() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const Middle = {
     padding: `13em 0`,
     background: `aliceblue`
   };
 
   const back = () => {
-    history.push("/app/mail");
+    navigate("/app/mail");
   };
   const logout = () => {
-    history.push("/");
+    navigate("/");
   };
   return (
     <Container fluid>

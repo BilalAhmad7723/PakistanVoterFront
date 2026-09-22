@@ -1,4 +1,4 @@
-import { React, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { Button, Container,Row } from "react-bootstrap";
 import { Editor } from "@tinymce/tinymce-react";
 import { SendOutlined } from "@ant-design/icons";
