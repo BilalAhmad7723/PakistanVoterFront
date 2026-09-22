@@ -1,4 +1,3 @@
-import React from "react";
 import { Layout } from "antd";
 import Header from "./Header";
 import SideMenu from "./SideMenu";
@@ -11,7 +10,7 @@ const LayoutWithRoute = ({ children }) => {
     <Layout style={{ minHeight: "100vh" }}>
       <SideMenu />
       <Layout className="site-layout">
-        <Header {...children}/>
+        <Header />
         <Content style={{ margin: "5px 5px" }}>{children}</Content>
         <Footer />
       </Layout>
