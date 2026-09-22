@@ -1,17 +1,17 @@
-import { React } from "react";
+import React from "react";
 import { Container } from "react-bootstrap";
 import { Result, Button } from "antd";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function NoMatch() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const Middle = {
     padding: `6em 0`,
     background: `aliceblue`
   };
 
   const back = () => {
-    history.push("/app/mail");
+    navigate("/app/mail");
   };
   return (
     <Container fluid>
