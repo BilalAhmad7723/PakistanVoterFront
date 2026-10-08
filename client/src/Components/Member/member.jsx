@@ -242,20 +242,18 @@ function Account() {
   };
 
   function EditModal(props) {
-    if(props.data.dateOFJoin) {
-        var today = new Date(seldata.dateOFJoin );
-        var year = today.getFullYear();
-        var mes = today.toLocaleString('en-us', { month: 'long' });
-        var dia = today.getDate();
-        var fecha =dia+"-"+mes+"-"+year;
-       // console.log(fecha);
-        seldata.dateOFJoin = fecha;
-    }
-  //  seldata.dateOFJoin = new Date(seldata.dateOFJoin);
+    const selectedData = props.data;
+    const joinDate = selectedData.dateOFJoin
+      ? new Date(selectedData.dateOFJoin).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
+      : "";
     return (
       <Modal
         {...props} size="xl" aria-labelledby="EditModalTitle" backdrop="static" keyboard={false} centered >
-        <Badge.Ribbon color="#008000" text={seldata.email + ":" + seldata.password} >
+        <Badge.Ribbon color="#008000" text={selectedData.email + ":" + selectedData.password} >
           <Modal.Header>
             <Modal.Title id="EditModal" style={{color:'green'}}>
               Update Account{" "}
@@ -270,66 +268,66 @@ function Account() {
             <Row>
               <Col lg={3} sm={3} className="mb-1">
                 <Form.Label>Email</Form.Label>
-                <Form.Control placeholder={seldata.email} defaultValue={seldata.email} type="text" {...register("email")} />
+                <Form.Control placeholder={selectedData.email} defaultValue={selectedData.email} type="text" {...register("email")} />
               </Col>
               <Col lg={3} sm={3} className="mb-1">
               <Form.Label>Name</Form.Label>
-              <Form.Control placeholder={seldata.name} defaultValue={seldata.name} type="text" {...register("name")} />
+              <Form.Control placeholder={selectedData.name} defaultValue={selectedData.name} type="text" {...register("name")} />
               </Col>
               <Col lg={3} sm={3} className="mb-1">
               <Form.Label>Father Name</Form.Label>
-              <Form.Control placeholder={seldata.father} defaultValue={seldata.father} type="text" {...register("father")} />
+              <Form.Control placeholder={selectedData.father} defaultValue={selectedData.father} type="text" {...register("father")} />
               </Col>
               <Col lg={3} sm={3} className="mb-1">
               <Form.Label>Password</Form.Label>
-              <Form.Control placeholder={seldata.password} defaultValue={seldata.password} type="text" {...register("password")} />
+              <Form.Control placeholder={selectedData.password} defaultValue={selectedData.password} type="text" {...register("password")} />
               </Col>
 
             </Row>
             <Row>
             <Col lg={3} sm={3} className="mb-1">
               <Form.Label>CNIC</Form.Label>
-                <Form.Control placeholder={seldata.cnic} defaultValue={seldata.cnic} type="text" {...register("cnic")} />
+                <Form.Control placeholder={selectedData.cnic} defaultValue={selectedData.cnic} type="text" {...register("cnic")} />
             </Col>
             <Col lg={6} sm={6} className="mb-1">
               <Form.Label>Full Address</Form.Label>
-              <Form.Control placeholder={seldata.fullAddress} defaultValue={seldata.fullAddress} type="text" {...register("fullAddress")} />
+              <Form.Control placeholder={selectedData.fullAddress} defaultValue={selectedData.fullAddress} type="text" {...register("fullAddress")} />
               </Col>
               <Col lg={3} sm={3} className="mb-1">
-              <Form.Label>Date Of joining:  <span style={{color:'green',fontFamily:'monospace',fontWeight:'bold'}}>{seldata.dateOFJoin}</span></Form.Label>
+              <Form.Label>Date Of joining:  <span style={{color:'green',fontFamily:'monospace',fontWeight:'bold'}}>{joinDate}</span></Form.Label>
               <Form.Control type="date" {...register("dateOFJoin")} />
               </Col>
             </Row>
             <Row>
               <Col lg={4} sm={4} className="mb-1">
               <Form.Label>Constituency</Form.Label>
-              <Controller name="constituency" control={control} render={({ field }) => <Select {...field} placeholder={seldata.constituency} defaultValue={seldata.constituency}  options={ConstituencyArray} />} />
+              <Controller name="constituency" control={control} render={({ field }) => <Select {...field} placeholder={selectedData.constituency} options={ConstituencyArray} />} />
               </Col>
               <Col lg={4} sm={4} className="mb-2">
               <Form.Label>Religion</Form.Label>
-              <Controller name="religion" control={control} render={({ field }) => <Select {...field} placeholder={seldata.religion} options={ReligionArray} />} />
+              <Controller name="religion" control={control} render={({ field }) => <Select {...field} placeholder={selectedData.religion} options={ReligionArray} />} />
               </Col>
               <Col lg={4} sm={4} className="mb-2">
               <Form.Label>Gender</Form.Label>
-              <Controller name="gender" control={control} render={({ field }) => <Select {...field} placeholder={seldata.gender}  options={GenderArray} />} />
+              <Controller name="gender" control={control} render={({ field }) => <Select {...field} placeholder={selectedData.gender} options={GenderArray} />} />
               </Col>
             </Row>
             <Row>
               <Col lg={3} sm={3} className="mb-3">
               <Form.Label>Telephone / Mob No.</Form.Label>
-              <Form.Control placeholder={seldata.phone} defaultValue={seldata.phone} type="text" {...register("phone")} />
+              <Form.Control placeholder={selectedData.phone} defaultValue={selectedData.phone} type="text" {...register("phone")} />
               </Col>
               <Col lg={3} sm={3} className="mb-3">
               <Form.Label>Occupation</Form.Label>
-              <Form.Control placeholder={seldata.occupation} defaultValue={seldata.occupation} type="text" {...register("occupation")} />
+              <Form.Control placeholder={selectedData.occupation} defaultValue={selectedData.occupation} type="text" {...register("occupation")} />
               </Col>
               <Col lg={3} sm={3} className="mb-3">
               <Form.Label>City</Form.Label>
-              <Form.Control placeholder={seldata.city} defaultValue={seldata.city} type="text" {...register("city")} />
+              <Form.Control placeholder={selectedData.city} defaultValue={selectedData.city} type="text" {...register("city")} />
               </Col>
               <Col lg={3} sm={3} className="mb-3">
               <Form.Label>Fee Collection</Form.Label>
-              <Form.Control placeholder={seldata.feeCollection} defaultValue={seldata.feeCollection} type="text" {...register("feeCollection")} />
+              <Form.Control placeholder={selectedData.feeCollection} defaultValue={selectedData.feeCollection} type="text" {...register("feeCollection")} />
               </Col>
             </Row>
           </Modal.Body>
@@ -370,6 +368,22 @@ function Account() {
                                     data={finaldata}
                                     onEdit={(item) => {
                                         setseldata(item);
+                                        reset({
+                                            email: item.email || "",
+                                            name: item.name || "",
+                                            father: item.father || "",
+                                            password: item.password || "",
+                                            cnic: item.cnic || "",
+                                            fullAddress: item.fullAddress || "",
+                                            dateOFJoin: item.dateOFJoin ? String(item.dateOFJoin).slice(0, 10) : "",
+                                            constituency: ConstituencyArray.find((option) => option.value === item.constituency) || null,
+                                            religion: ReligionArray.find((option) => option.value === item.religion) || null,
+                                            gender: GenderArray.find((option) => option.value === item.gender) || null,
+                                            phone: item.phone || "",
+                                            occupation: item.occupation || "",
+                                            city: item.city || "",
+                                            feeCollection: item.feeCollection || "",
+                                        });
                                         setModalShow(true);
                                     }}
                                     onDelete={confirm}
@@ -391,4 +405,3 @@ function Account() {
   );
 }
 export default Account;
-
