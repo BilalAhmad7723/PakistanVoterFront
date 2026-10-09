@@ -155,4 +155,31 @@ router.route('/delete-account/:id').delete((req, res, next) => {
   })
 })
 
+router.route('/change-password').post(async (req, res, next) => {
+  try {
+    const { cnic, oldPassword, newPassword } = req.body;
+    const fail = (message, status) => res.json({ message, status, data: null });
+
+    if ([cnic, oldPassword, newPassword].some(v => typeof v !== 'string' || !v)) {
+      return fail('CNIC, current password and new password are required', 400);
+    }
+    if (newPassword.length < 6 || newPassword.length > 64) {
+      return fail('New password must be between 6 and 64 characters', 400);
+    }
+
+    const user = await userSchema.findOne({ cnic }).lean();
+    if (!user || user.password !== oldPassword) {
+      return fail('Current password is incorrect', 205);
+    }
+    if (newPassword === oldPassword) {
+      return fail('New password must be different from the current one', 400);
+    }
+
+    await userSchema.updateOne({ _id: user._id }, { $set: { password: newPassword } });
+    return res.json({ message: 'Password changed successfully!', status: 200, data: null });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
